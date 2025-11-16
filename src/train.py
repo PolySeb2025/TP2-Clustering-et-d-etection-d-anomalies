@@ -22,7 +22,7 @@ def train_autoencoder(model, train_loader, n_epochs=50, lr=1e-3):
             
             # 1. Forward pass
             outputs = model(inputs)
-            loss = criterion(outputs, targets)
+            loss = criterion(outputs, inputs)
             
             # 2. Backward pass et optimisation
             optimizer.zero_grad()
@@ -62,7 +62,7 @@ def train_denoising_autoencoder(model, train_loader, n_epochs=50, lr=1e-3, noise
             outputs = model(noisy_inputs)
             
             # 3. Calculer la perte par rapport aux entrées ORIGINALES (targets)
-            loss = criterion(outputs, targets)
+            loss = criterion(outputs, inputs)
             
             # 4. Backward pass
             optimizer.zero_grad()

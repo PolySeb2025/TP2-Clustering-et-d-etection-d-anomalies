@@ -7,6 +7,9 @@ from sklearn import metrics
 from sklearn.decomposition import PCA
 import umap
 import warnings
+import torch
+from sklearn.metrics import precision_recall_curve
+
 
 def load_dataset(data_path, labels_path):
     """
@@ -197,4 +200,21 @@ def plot_clusters(X, labels, title="Visualisation des Clusters", reducer_method=
     plt.grid(True)
     plt.show()
 
-    ###############################################################################################################
+###############################################################################################################
+
+
+def evaluate_model_threshold(model, loader, y_true):
+        print("Calcul des erreurs et du seuil optimal...")
+        model.eval()
+        errors = []
+        with torch.no_grad():
+            for inputs, _ in loader:
+                recon = model(inputs)
+                batch_errors = torch.mean((inputs - recon) ** 2, dim=1)
+                errors.extend(batch_errors.numpy())
+        
+        precisions, recalls, thresholds = precision_recall_curve(y_true, errors)
+        f1_scores = (2 * precisions * recalls) / (precisions + recalls)
+        f1_scores = f1_scores[:-1] # le dernier f1 est nan
+        threshold_best = thresholds[np.nan_to_num(f1_scores).argmax()]
+        return threshold_best, np.max(np.nan_to_num(f1_scores))
