@@ -1,0 +1,14 @@
+# Fichiers Python et Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints
+
+# Fichiers de données (NE PAS METTRE SUR GITHUB)
+# Ceci ignore tout ce qui est dans le dossier 'data'
+data/*
+
+# Environnements (NE PAS METTRE SUR GITHUB)
+udes_sd_a25/
+
+# Fichiers système
+.DS_Store
