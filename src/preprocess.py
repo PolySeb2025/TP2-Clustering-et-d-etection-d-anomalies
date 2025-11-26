@@ -80,7 +80,6 @@ def reduce_dimension_for_clustering(data, method='PCA', n_components=100):
         reducer = PCA(n_components=n_components, random_state=42)
     
     elif method == 'UMAP':
-        # Vous devez avoir 'umap-learn' d'installé (pip install umap-learn)
         reducer = umap.UMAP(n_components=n_components, 
                             random_state=42, 
                             n_neighbors=15, 
