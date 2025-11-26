@@ -28,6 +28,24 @@ Le projet est structuré de manière modulaire, séparant le code source (foncti
 ├── .gitignore
 └── README.md
 
+📦 Mise en place des Données (Important)
+
+Les jeux de données étant volumineux, ils sont ignorés par Git et ne sont pas présents dans ce dépôt. 
+Pour que les scripts fonctionnent, vous devez créer un dossier data à la racine du projet et y déposer les fichiers sources.
+
+L'arborescence de votre dossier doit ressembler exactement à ceci :
+
+.
+├── data/
+│   ├── ECG/                 # Dossier vide (sera rempli par le script de préparation)
+│   ├── HISEQ/               # Dossier vide (sera rempli par le script de préparation)
+│   ├── ecg.npz              # Fichier source ECG
+│   ├── hiseq_data.csv       # Fichier source Hi-Seq (Données)
+│   └── hiseq_labels.csv     # Fichier source Hi-Seq (Labels)
+├── notebooks/
+├── src/
+└── ...
+
 
 🛠️ Prérequis et Installation
 
