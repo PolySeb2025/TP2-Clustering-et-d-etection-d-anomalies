@@ -1,0 +1,119 @@
+
+TP2 : Clustering et Détection d'Anomalies
+
+Ce projet explore différentes techniques d'apprentissage non supervisé appliquées à deux domaines distincts : 
+le clustering de données génomiques (Hi-Seq) et la détection d'anomalies sur des données médicales (ECG).
+
+Le projet est structuré de manière modulaire, séparant le code source (fonctions utilitaires, modèles) des notebooks d'analyse et d'exécution.
+
+
+.
+├── data/                   # Dossier des données (brutes et prétraitées)
+│   ├── HISEQ/              # Données pour le clustering
+│   └── ECG/                # Données pour la détection d'anomalies
+├── notebooks/              # Notebooks Jupyter d'exécution
+│   ├── PreparationData.ipynb             # À exécuter en premier (normalisation)
+│   ├── clustering/
+│   │   ├── Clustering_SIMPLE.ipynb       # Clustering sur données brutes
+│   │   ├── Clustering_PCA.ipynb          # Clustering après PCA
+│   │   └── Clustering_UMAP.ipynb         # Clustering après UMAP
+│   └── anomalies/
+│       ├── Anomalie_IsolationForest.ipynb # Détection via Isolation Forest
+│       └── Anomalie_AutoEncodeur.ipynb    # Détection via AE et DAE (PyTorch)
+├── src/                    # Code source modulaire
+│   ├── models.py           # Architectures PyTorch (Autoencoder, DAE)
+│   ├── preprocess.py       # Fonctions de normalisation et réduction de dimension
+│   ├── train.py            # Boucles d'entraînement PyTorch
+│   └── utils.py            # Chargement de données, métriques et visualisations
+├── .gitignore
+└── README.md
+
+
+🛠️ Prérequis et Installation
+
+Le projet nécessite Python 3.8+ et les bibliothèques suivantes :
+
+    numpy, pandas (Manipulation de données)
+
+    scikit-learn (Algorithmes de ML classiques)
+
+    torch (Deep Learning)
+
+    umap-learn (Réduction de dimension UMAP)
+
+    kneed (Détection du coude pour DBSCAN/K-Means)
+
+    matplotlib, seaborn (Visualisation)
+
+
+Vous pouvez installer les dépendances via pip :
+
+pip install numpy pandas scikit-learn torch umap-learn kneed matplotlib seaborn
+
+
+🚀 Instructions d'Utilisation
+
+1. Préparation des Données (Étape Obligatoire)
+
+Avant de lancer les analyses, vous devez préparer et normaliser les données brutes.
+
+    Assurez-vous que les fichiers bruts (hiseq_data.csv, hiseq_labels.csv, ecg.npz) sont dans le dossier data/.
+
+    Exécutez le notebook : notebooks/PreparationData.ipynb
+
+        Cela générera les fichiers .npy normalisés nécessaires pour la suite.
+
+2. Partie Clustering (Données Hi-Seq)
+
+L'objectif est de regrouper des échantillons de tumeurs selon leur expression génique. Trois approches sont comparées :
+
+    Sans réduction : notebooks/clustering/Clustering_SIMPLE.ipynb
+
+    Avec PCA (100D) : notebooks/clustering/Clustering_PCA.ipynb
+
+    Avec UMAP (100D) : notebooks/clustering/Clustering_UMAP.ipynb
+
+Chaque notebook teste 3 algorithmes :
+
+    K-Means (méthode des centres)
+
+    DBSCAN (méthode basée sur la densité)
+
+    Spectral Clustering (méthode basée sur les graphes)
+
+Les résultats sont évalués via des métriques internes (Silhouette) et externes (ARI, V-Measure) sur 10 exécutions pour garantir la robustesse statistique.
+
+3. Partie Détection d'Anomalies (Données ECG)
+
+L'objectif est d'identifier des battements cardiaques anormaux dans des signaux ECG.
+
+    Approche Statistique : notebooks/anomalies/Anomalie_IsolationForest.ipynb
+
+        Utilise l'algorithme Isolation Forest.
+
+    Approche Deep Learning : notebooks/anomalies/Anomalie_AutoEncodeur.ipynb
+
+        Compare un Auto-Encodeur (AE) classique et un Denoising Auto-Encodeur (DAE).
+
+        Le modèle apprend à reconstruire les données saines ; les anomalies sont détectées via une erreur de reconstruction élevée (MSE).
+
+
+🧠 Détails Techniques (Dossier src/)
+
+Le code a été factorisé pour éviter la redondance dans les notebooks :
+
+    src/preprocess.py : Contient normalize_data, reduce_dimension_for_clustering (PCA/UMAP) et reduce_dimension_for_viz.
+
+    src/models.py : Définit les classes PyTorch Autoencoder et DenoisingAutoencoder.
+
+    src/train.py : Gère les boucles d'entraînement, la gestion du bruit pour le DAE et le calcul de la perte.
+
+    src/utils.py :
+
+        load_dataset : Chargement robuste des CSV.
+
+        evaluate_clustering : Calcul centralisé des scores (ARI, Silhouette, Homogénéité, etc.).
+
+        run_stochastic_protocol : Lance N exécutions pour obtenir moyenne et écart-type.
+
+        plot_clusters : Visualisation 2D des résultats.
